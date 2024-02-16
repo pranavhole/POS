@@ -5,8 +5,9 @@ import SelectionDex from '../components/selectionDex'
 function PoSoftware() {
   return (
     <div className=' flex'>
-      <Order/>
+    
       <SelectionDex/>
+      <Order/>
     </div>
   )
 }
