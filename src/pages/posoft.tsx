@@ -1,4 +1,3 @@
-// pages/index.tsx
 "use client"
 import React, { useState } from 'react';
 import MenuItems from '@/components/menu';
@@ -6,29 +5,31 @@ import OrderedItems from '@/components/order';
 import Tables from '@/components/tabel';
 import { Table, MenuItem, OrderedItem } from '../types';
 
-// Mock data
-const tables: Table[] = [
-  { id: 1, name: 'Table 1' },
-  { id: 2, name: 'Table 2' },
-  { id: 3, name: 'Table 3' },
-];
-
-const menuItems: MenuItem[] = [
-  { id: 1, name: 'Item 1', price: 10 },
-  { id: 2, name: 'Item 2', price: 15 },
-  { id: 3, name: 'Item 3', price: 20 },
-];
-
 const POSoftware: React.FC = () => {
+  // Mock data
+  const tables: Table[] = [
+    { id: 1, name: 'Table 1' },
+    { id: 2, name: 'Table 2' },
+    { id: 3, name: 'Table 3' },
+  ];
+
+  const menuItems: MenuItem[] = [
+    { id: 1, name: 'Item 1', price: 10 },
+    { id: 2, name: 'Item 2', price: 15 },
+    { id: 3, name: 'Item 3', price: 20 },
+  ];
+
   const [selectedTable, setSelectedTable] = useState<Table | null>(null);
   const [selectedMenuItem, setSelectedMenuItem] = useState<MenuItem | null>(
     null
   );
   const [orderedItems, setOrderedItems] = useState<OrderedItem[]>([]);
+  const [orderType, setOrderType] = useState<string | null>(null); // State for order type
 
   const handleTableSelect = (table: Table) => {
     setSelectedTable(table);
-    setSelectedMenuItem(null); // Reset selected menu item when selecting a table
+    setSelectedMenuItem(null);
+    setOrderType(null); // Reset order type when table is selected
   };
 
   const handleMenuItemSelect = (menuItem: MenuItem) => {
@@ -59,6 +60,46 @@ const POSoftware: React.FC = () => {
     setOrderedItems(updatedOrderedItems);
   };
 
+  const handlePrintBill = () => {
+    const billContent = generateBillContent(); // Function to generate bill content
+
+    const printWindow = window.open('', '_blank', 'width=700,height=700');
+    if (printWindow) {
+      printWindow.document.write('<html><head><title>Print Bill</title></head><body>');
+      printWindow.document.write('<pre>' + billContent + '</pre>');
+      printWindow.document.write('</body></html>');
+
+      printWindow.document.close(); // Close document to enable printing
+      printWindow.print();
+    } else {
+      console.error('Failed to open print window.');
+    }
+  };
+
+  const generateBillContent = () => {
+    // You can customize the bill content as per your requirement
+    let billContent = '';
+    if (selectedTable) {
+      billContent += `Table: ${selectedTable.name}\n\n`;
+    }
+    if (orderType) { // Include order type if it's selected
+      billContent += `Order Type: ${orderType}\n\n`;
+    }
+    billContent += 'Ordered Items:\n';
+    orderedItems.forEach((orderedItem, index) => {
+      billContent += `${index + 1}. ${orderedItem.menuItem.name} - Quantity: ${orderedItem.quantity}, Price: $${orderedItem.menuItem.price}\n`;
+    });
+    billContent += '\n';
+    const totalBillAmount = orderedItems.reduce((total, item) => total + item.menuItem.price * item.quantity, 0);
+    billContent += `Total Bill Amount: $${totalBillAmount.toFixed(2)}`;
+
+    return billContent;
+  };
+
+  const handleSelectOrderType = (type: string) => {
+    setOrderType(type);
+  };
+
   return (
     <div className='flex'>
       {!selectedTable ? (
@@ -70,17 +111,19 @@ const POSoftware: React.FC = () => {
             onMenuItemSelect={handleMenuItemSelect}
             onOrder={handleAddToOrder}
           />
-          {/* {selectedMenuItem && (
-            <div>
-              <button onClick={handleAddToOrder}>Add to Order</button>
-            </div>
-          )} */}
         </React.Fragment>
       )}
-      <OrderedItems
-        orderedItems={orderedItems}
-        onRemoveFromOrder={handleRemoveFromOrder}
-      />
+      {selectedTable && (
+        <OrderedItems
+          tableNumber={selectedTable.id} // Pass table number
+          orderedItems={orderedItems}
+          onRemoveFromOrder={handleRemoveFromOrder}
+          onPrintBill={handlePrintBill} // Pass print bill function
+          onSelectOrderType={handleSelectOrderType} // Pass select order type function
+        />
+      )}
+
+
     </div>
   );
 };

@@ -14,9 +14,9 @@ const MenuItems: React.FC<Props> = ({ menuItems, onMenuItemSelect , onOrder}) =>
       <div className='h-[5vh] bg-slate-200 flex justify-center items-center font-bold text-cyan-700 text-xl'>
         Menu Item
       </div>
-      <ul className='grid gap-5 grid-cols-5 w-[100%] h-[10vh] p-4'>
+      <ul className='grid gap-5 grid-cols-5 w-[100%] h-[10vh] p-4 cursor-pointer'>
         {menuItems.map((menuItem) => (
-          <li className='bg-orange-300 flex justify-center items-center h-[180px]  font-bold' key={menuItem.id} onClick={() => {onMenuItemSelect(menuItem); onOrder()}} >
+          <li className='bg-orange-300 flex justify-center items-center h-[180px]  hover:bg-orange-500 font-bold' key={menuItem.id} onClick={() => {onMenuItemSelect(menuItem); onOrder()}} >
             {menuItem.name} - ${menuItem.price}
           </li>
         ))}
