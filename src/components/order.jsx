@@ -1,22 +1,16 @@
 import React from 'react';
 import { OrderedItem } from '../types';
 
-type Props = {
-  tableNumber: number;
-  orderedItems: OrderedItem[];
-  onRemoveFromOrder: (index: number) => void;
-  onPrintBill: () => void; // Function to print bill
-  onSelectOrderType: (orderType: string) => void; // Function to select order type
-};
 
-const OrderedItems: React.FC<Props> = ({
+const OrderedItems= ({
   tableNumber,
   orderedItems,
   onRemoveFromOrder,
   onPrintBill,
   onSelectOrderType,
+  onBilling
 }) => {
-  const handleOrderTypeSelect = (orderType: string) => {
+  const handleOrderTypeSelect = (orderType) => {
     onSelectOrderType(orderType);
   };
 

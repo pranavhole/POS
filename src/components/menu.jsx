@@ -1,14 +1,6 @@
-// components/MenuItems.tsx
 import React from 'react';
-import { MenuItem } from '../types';
 
-type Props = {
-  menuItems: MenuItem[];
-  onMenuItemSelect: (menuItem: MenuItem) => void;
-  onOrder: () => void;
-};
-
-const MenuItems: React.FC<Props> = ({ menuItems, onMenuItemSelect , onOrder}) => {
+const MenuItems = ({ menuItems, onMenuItemSelect , onOrder}) => {
   return (
     <div className='h-[90vh] bg-slate-300 w-[75vw] rounded-md text-white mt-2 mr-2'>
       <div className='h-[5vh] bg-slate-200 flex justify-center items-center font-bold text-cyan-700 text-xl'>
@@ -26,3 +18,4 @@ const MenuItems: React.FC<Props> = ({ menuItems, onMenuItemSelect , onOrder}) =>
 };
 
 export default MenuItems;
+
